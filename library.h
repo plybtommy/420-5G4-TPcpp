@@ -37,6 +37,10 @@ public:
     bool checkOutBook(const string& isbn, const string& userId);
     bool returnBook(const string& isbn);
     
+    // Borrower helpers
+    string getBorrowerName(const Book& book) const;
+    string formatBook(const Book& book) const;
+
     // Display methods
     void displayAllBooks();
     void displayAvailableBooks();

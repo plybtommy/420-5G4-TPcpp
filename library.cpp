@@ -146,6 +146,28 @@ bool Library::returnBook(const string& isbn) {
     return false;
 }
 
+// Get the borrower's name (falls back to the ID if the user is unknown)
+string Library::getBorrowerName(const Book& book) const {
+    const string& borrowerId = book.getBorrowerId();
+    auto it = find_if(users.begin(), users.end(),
+        [&borrowerId](const unique_ptr<User>& user) {
+            return user->getUserId() == borrowerId;
+        });
+
+    return (it != users.end()) ? (*it)->getName() : borrowerId;
+}
+
+// Book description showing the borrower's name instead of the ID
+string Library::formatBook(const Book& book) const {
+    if (book.getAvailability()) {
+        return book.toString();
+    }
+
+    Book displayed(book);
+    displayed.setBorrowerId(getBorrowerName(book));
+    return displayed.toString();
+}
+
 // Display all books
 void Library::displayAllBooks() {
     if (books.empty()) {
@@ -156,7 +178,7 @@ void Library::displayAllBooks() {
     cout << "\n=== TOUS LES LIVRES ===\n";
     for (size_t i = 0; i < books.size(); ++i) {
         cout << "\nLivre " << (i + 1) << " :\n";
-        cout << books[i]->toString() << "\n";
+        cout << formatBook(*books[i]) << "\n";
         cout << "-------------------------\n";
     }
 }
@@ -173,7 +195,7 @@ void Library::displayAvailableBooks() {
     cout << "\n=== LIVRES DISPONIBLES ===\n";
     for (size_t i = 0; i < available.size(); ++i) {
         cout << "\nLivre " << (i + 1) << " :\n";
-        cout << available[i]->toString() << "\n";
+        cout << formatBook(*available[i]) << "\n";
         cout << "---------------------------\n";
     }
 }
