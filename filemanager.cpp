@@ -66,6 +66,10 @@ bool FileManager::loadBooksFromFile(Library& library) {
     string line;
     int count = 0;
     while (getline(file, line)) {
+        // Retire le '\r' final des fichiers enregistrés sous Windows (CRLF)
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
         if (!line.empty()) {
             Book book;
             book.fromFileFormat(line);
@@ -90,6 +94,10 @@ bool FileManager::loadUsersFromFile(Library& library) {
     string line;
     int count = 0;
     while (getline(file, line)) {
+        // Retire le '\r' final des fichiers enregistrés sous Windows (CRLF)
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
         if (!line.empty()) {
             User user;
             user.fromFileFormat(line);
