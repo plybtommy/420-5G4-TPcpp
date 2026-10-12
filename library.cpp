@@ -168,23 +168,51 @@ string Library::formatBook(const Book& book) const {
     return displayed.toString();
 }
 
+// Lowercase copy of a string, used for case-insensitive comparisons
+static string toLower(string text) {
+    transform(text.begin(), text.end(), text.begin(), ::tolower);
+    return text;
+}
+
+// Sort a list of books by title or author using std::sort
+void Library::sortBooks(vector<Book*>& list, SortOrder order) {
+    if (order == SortOrder::Title) {
+        sort(list.begin(), list.end(), [](const Book* a, const Book* b) {
+            return toLower(a->getTitle()) < toLower(b->getTitle());
+        });
+    } else if (order == SortOrder::Author) {
+        // Same author : sort by title
+        sort(list.begin(), list.end(), [](const Book* a, const Book* b) {
+            string authorA = toLower(a->getAuthor());
+            string authorB = toLower(b->getAuthor());
+            if (authorA != authorB) {
+                return authorA < authorB;
+            }
+            return toLower(a->getTitle()) < toLower(b->getTitle());
+        });
+    }
+}
+
 // Display all books
-void Library::displayAllBooks() {
+void Library::displayAllBooks(SortOrder order) {
     if (books.empty()) {
         cout << "Aucun livre dans la bibliothèque.\n";
         return;
     }
     
+    auto allBooks = getAllBooks();
+    sortBooks(allBooks, order);
+
     cout << "\n=== TOUS LES LIVRES ===\n";
-    for (size_t i = 0; i < books.size(); ++i) {
+    for (size_t i = 0; i < allBooks.size(); ++i) {
         cout << "\nLivre " << (i + 1) << " :\n";
-        cout << formatBook(*books[i]) << "\n";
+        cout << formatBook(*allBooks[i]) << "\n";
         cout << "-------------------------\n";
     }
 }
 
 // Display available books
-void Library::displayAvailableBooks() {
+void Library::displayAvailableBooks(SortOrder order) {
     auto available = getAvailableBooks();
     
     if (available.empty()) {
@@ -192,6 +220,8 @@ void Library::displayAvailableBooks() {
         return;
     }
     
+    sortBooks(available, order);
+
     cout << "\n=== LIVRES DISPONIBLES ===\n";
     for (size_t i = 0; i < available.size(); ++i) {
         cout << "\nLivre " << (i + 1) << " :\n";

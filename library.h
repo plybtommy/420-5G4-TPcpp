@@ -9,6 +9,9 @@
 
 using namespace std;
 
+// Sort criteria for book listings
+enum class SortOrder { None, Title, Author };
+
 class Library {
 private:
     vector<unique_ptr<Book>> books;
@@ -42,8 +45,9 @@ public:
     string formatBook(const Book& book) const;
 
     // Display methods
-    void displayAllBooks();
-    void displayAvailableBooks();
+    static void sortBooks(vector<Book*>& list, SortOrder order);
+    void displayAllBooks(SortOrder order = SortOrder::None);
+    void displayAvailableBooks(SortOrder order = SortOrder::None);
     void displayAllUsers();
     
     // Statistics

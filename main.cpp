@@ -45,6 +45,14 @@ string getInput(const string& prompt) {
     return input;
 }
 
+// Ask the user how a book listing should be sorted
+SortOrder askSortOrder() {
+    string choice = getInput("Trier par : 1. Titre  2. Auteur  (Entrée = ordre d'ajout) : ");
+    if (choice == "1") return SortOrder::Title;
+    if (choice == "2") return SortOrder::Author;
+    return SortOrder::None;
+}
+
 void printUsage(const char* programName) {
     cerr << "Usage: " << programName << " [--data-dir|-d <répertoire>]\n";
 }
@@ -138,6 +146,7 @@ int main(int argc, char* argv[]) {
                 if (results.empty()) {
                     cout << "Aucun livre trouvé avec ce titre.\n";
                 } else {
+                    Library::sortBooks(results, askSortOrder());
                     cout << "\n=== RÉSULTATS DE RECHERCHE ===\n";
                     for (size_t i = 0; i < results.size(); ++i) {
                         cout << "\nRésultat " << (i + 1) << " :\n";
@@ -156,6 +165,7 @@ int main(int argc, char* argv[]) {
                 if (results.empty()) {
                     cout << "Aucun livre trouvé de cet auteur.\n";
                 } else {
+                    Library::sortBooks(results, askSortOrder());
                     cout << "\n=== RÉSULTATS DE RECHERCHE ===\n";
                     for (size_t i = 0; i < results.size(); ++i) {
                         cout << "\nRésultat " << (i + 1) << " :\n";
@@ -168,12 +178,12 @@ int main(int argc, char* argv[]) {
             }
             
             case 5: // Display All Books
-                library.displayAllBooks();
+                library.displayAllBooks(askSortOrder());
                 pauseForInput();
                 break;
             
             case 6: // Display Available Books
-                library.displayAvailableBooks();
+                library.displayAvailableBooks(askSortOrder());
                 pauseForInput();
                 break;
             
