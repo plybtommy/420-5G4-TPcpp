@@ -11,6 +11,10 @@ FileManager::FileManager(const string& booksFile, const string& usersFile)
 
 // Save all library data
 bool FileManager::saveLibraryData(Library& library) {
+    if (!hasDataPaths()) {
+        cout << "Aucun répertoire de données spécifié (option --data-dir) : les données ne seront pas sauvegardées.\n";
+        return false;
+    }
     return saveBooksToFile(library) && saveUsersToFile(library);
 }
 
@@ -128,4 +132,9 @@ void FileManager::createBackup() {
     }
     
     cout << "Fichiers de sauvegarde créés.\n";
+}
+
+// Indique si des chemins de fichiers de données ont été fournis
+bool FileManager::hasDataPaths() const {
+    return !booksFileName.empty() && !usersFileName.empty();
 }
