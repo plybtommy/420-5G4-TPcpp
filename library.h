@@ -46,7 +46,7 @@ public:
     string toLogFormat(const Book& book) const;
 
     // Display methods
-    static void sortBooks(vector<Book*>& list, SortOrder order);
+    void sortBooks(vector<Book*>& list, SortOrder order);
     void displayAllBooks(SortOrder order = SortOrder::None);
     void displayAvailableBooks(SortOrder order = SortOrder::None);
     void displayAllUsers();

@@ -66,7 +66,7 @@ Exemple de journal :
 
 ### Question 1 : C++ — les pointeurs intelligents (`unique_ptr`)
 
-Une notion qu'on a peu vue en cours et qui est au cœur du projet, ce sont les pointeurs intelligents. Dans `library.h`, la bibliothèque ne garde pas ses livres directement, mais des `unique_ptr` :
+Une notion qu'on a peu vue en cours et qui est au coeur du projet, ce sont les pointeurs intelligents. Dans `library.h`, la bibliothèque ne garde pas ses livres directement, mais des `unique_ptr` :
 
 ```cpp
 vector<unique_ptr<Book>> books;

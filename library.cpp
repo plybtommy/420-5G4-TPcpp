@@ -176,7 +176,7 @@ string Library::toLogFormat(const Book& book) const {
 }
 
 // Lowercase copy of a string, used for case-insensitive comparisons
-static string toLower(string text) {
+string toLower(string text) {
     transform(text.begin(), text.end(), text.begin(), ::tolower);
     return text;
 }
