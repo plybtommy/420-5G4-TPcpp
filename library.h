@@ -43,6 +43,7 @@ public:
     // Borrower helpers
     string getBorrowerName(const Book& book) const;
     string formatBook(const Book& book) const;
+    string toLogFormat(const Book& book) const;
 
     // Display methods
     static void sortBooks(vector<Book*>& list, SortOrder order);

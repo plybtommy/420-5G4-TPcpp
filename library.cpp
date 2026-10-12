@@ -168,6 +168,13 @@ string Library::formatBook(const Book& book) const {
     return displayed.toString();
 }
 
+// Journal line : titre|auteur|isbn|disponible|nom de l'emprunteur
+string Library::toLogFormat(const Book& book) const {
+    string borrowerName = book.getAvailability() ? "" : getBorrowerName(book);
+    return book.getTitle() + "|" + book.getAuthor() + "|" + book.getISBN() + "|" +
+           (book.getAvailability() ? "1" : "0") + "|" + borrowerName;
+}
+
 // Lowercase copy of a string, used for case-insensitive comparisons
 static string toLower(string text) {
     transform(text.begin(), text.end(), text.begin(), ::tolower);
