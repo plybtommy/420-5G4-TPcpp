@@ -146,56 +146,63 @@ bool Library::returnBook(const string& isbn) {
     return false;
 }
 
-// Get the borrower's name (falls back to the ID if the user is unknown)
+//NOUVELLE FONCTIONNALITE - ON GET LE NOM AU LIEU DU ID (interface et Expérience Utilisateur)
+
+// Get le nom de la personne qui emprunte (borrower) - id si nom est inconnu
 string Library::getBorrowerName(const Book& book) const {
-    const string& borrowerId = book.getBorrowerId();
-    auto it = find_if(users.begin(), users.end(),
-        [&borrowerId](const unique_ptr<User>& user) {
-            return user->getUserId() == borrowerId;
+    const string& borrowerId = book.getBorrowerId();//id de la personne
+    auto it = find_if(users.begin(), users.end(), //parcourt la liste des utilisateurs
+        [&borrowerId](const unique_ptr<User>& user) {//lambda recoit chaque users
+            return user->getUserId() == borrowerId;//si id correspond
         });
 
-    return (it != users.end()) ? (*it)->getName() : borrowerId;
+    return (it != users.end()) ? (*it)->getName() : borrowerId; // retournee nom si valide sinon le id
 }
 
-// Book description showing the borrower's name instead of the ID
+// Return affichage du livre avec le nom de l'emprunteur au lieu de son id
 string Library::formatBook(const Book& book) const {
-    if (book.getAvailability()) {
-        return book.toString();
+    if (book.getAvailability()) {// si le livre disponible, 0 borrower à afficher
+        return book.toString();//return affichage normal du livre
     }
 
-    Book displayed(book);
-    displayed.setBorrowerId(getBorrowerName(book));
-    return displayed.toString();
+    Book displayed(book);// copie le livre pour pas modifier l'original
+    
+    displayed.setBorrowerId(getBorrowerName(book));//remplace l'id du borrower par son nom
+    
+    return displayed.toString();// return qui affiche le nom et non le id
 }
 
-// Journal line : titre|auteur|isbn|disponible|nom de l'emprunteur
+//NOUVELLE FONCTIONNALITE - JOURNAL D'ACTIVITES
+
+// ligne du journal : titre auteur isbn disponible nom de l'emprunteur
 string Library::toLogFormat(const Book& book) const {
-    string borrowerName = book.getAvailability() ? "" : getBorrowerName(book);
-    return book.getTitle() + "|" + book.getAuthor() + "|" + book.getISBN() + "|" +
+    string borrowerName = book.getAvailability() ? "" : getBorrowerName(book);// si le livre est dispo, pas d'emprunteur ; sinon on va chercher son nom
+    return book.getTitle() + "|" + book.getAuthor() + "|" + book.getISBN() + "|" +// on colle les infos du livre séparées par des | (1 = disponible, 0 = emprunté)
            (book.getAvailability() ? "1" : "0") + "|" + borrowerName;
 }
 
-// Lowercase copy of a string, used for case-insensitive comparisons
+// copy en lowercase
 string toLower(string text) {
     transform(text.begin(), text.end(), text.begin(), ::tolower);
     return text;
 }
 
-// Sort a list of books by title or author using std::sort
+//NOUVELLE FONCTIONNALITE - ON TRIE LES LIVRES (Gestion de données)
+
+// trier liste de livres par titre ou auteur (std::sort)
 void Library::sortBooks(vector<Book*>& list, SortOrder order) {
-    if (order == SortOrder::Title) {
+    if (order == SortOrder::Title) {//par titre
         sort(list.begin(), list.end(), [](const Book* a, const Book* b) {
-            return toLower(a->getTitle()) < toLower(b->getTitle());
+            return toLower(a->getTitle()) < toLower(b->getTitle());// 'a' devant si son titre vient avant alphabetique
         });
-    } else if (order == SortOrder::Author) {
-        // Same author : sort by title
+    } else if (order == SortOrder::Author) {//par autheur
         sort(list.begin(), list.end(), [](const Book* a, const Book* b) {
             string authorA = toLower(a->getAuthor());
             string authorB = toLower(b->getAuthor());
             if (authorA != authorB) {
                 return authorA < authorB;
             }
-            return toLower(a->getTitle()) < toLower(b->getTitle());
+            return toLower(a->getTitle()) < toLower(b->getTitle()); //meme principe mais return autheur
         });
     }
 }
@@ -207,8 +214,8 @@ void Library::displayAllBooks(SortOrder order) {
         return;
     }
     
-    auto allBooks = getAllBooks();
-    sortBooks(allBooks, order);
+    auto allBooks = getAllBooks();//copie de la liste des livres
+    sortBooks(allBooks, order);//on trie la liste
 
     cout << "\n=== TOUS LES LIVRES ===\n";
     for (size_t i = 0; i < allBooks.size(); ++i) {
@@ -227,7 +234,7 @@ void Library::displayAvailableBooks(SortOrder order) {
         return;
     }
     
-    sortBooks(available, order);
+    sortBooks(available, order);//trie livres
 
     cout << "\n=== LIVRES DISPONIBLES ===\n";
     for (size_t i = 0; i < available.size(); ++i) {

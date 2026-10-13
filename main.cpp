@@ -274,10 +274,10 @@ int main(int argc, char* argv[]) {
             }
             
             case 0: // Exit
-                if (fileManager.hasDataPaths()) {
+                if (fileManager.hasDataPaths()) {//annonce la sauvegarde seulement si ya un repertoire de données
                     cout << "Sauvegarde des données avant la fermeture...\n";
                 }
-                fileManager.saveLibraryData(library);
+                fileManager.saveLibraryData(library);   //sauvegarde (affiche message d'erreur si pas --date-dir)
                 cout << "Merci d'avoir utilisé le Système de Gestion de Bibliothèque Personnelle !\n";
                 running = false;
                 break;

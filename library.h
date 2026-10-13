@@ -9,7 +9,7 @@
 
 using namespace std;
 
-// Sort criteria for book listings
+//critere de filtre
 enum class SortOrder { None, Title, Author };
 
 class Library {

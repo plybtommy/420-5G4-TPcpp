@@ -9,12 +9,13 @@ using namespace std;
 FileManager::FileManager(const string& booksFile, const string& usersFile)
     : booksFileName(booksFile), usersFileName(usersFile) {}
 
-// Save all library data
+// Sauvegarde toutes les données de la biblio
 bool FileManager::saveLibraryData(Library& library) {
-    if (!hasDataPaths()) {
-        cout << "Aucun répertoire de données spécifié (option --data-dir) : les données ne seront pas sauvegardées.\n";
-        return false;
+    if (!hasDataPaths()) {// si aucun répertoire de données n'a été donné (chemins vides)
+        cout << "Aucun répertoire de données spécifié (option --data-dir) : les données ne seront pas sauvegardées.\n";//affiche message au lieu d'echouer en silence
+        return false;// on ne sauvegarde pas
     }
+    // sinon on sauvegarde les livres et les utilisateurs normalement
     return saveBooksToFile(library) && saveUsersToFile(library);
 }
 
@@ -134,7 +135,9 @@ void FileManager::createBackup() {
     cout << "Fichiers de sauvegarde créés.\n";
 }
 
-// Indique si des chemins de fichiers de données ont été fournis
+//CORRECTION DU BUG - SAUVEGARDE SANS --data-dir
+
+// Indique si des chemins de fichiers de donnees ont été fournis
 bool FileManager::hasDataPaths() const {
-    return !booksFileName.empty() && !usersFileName.empty();
+    return !booksFileName.empty() && !usersFileName.empty();// vrai seulement si les 2 chemins (livres et utilisateurs) ne sont pas vides
 }
